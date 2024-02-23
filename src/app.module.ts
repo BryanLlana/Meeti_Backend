@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { GroupModule } from './group/group.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { GroupModule } from './group/group.module';
       autoLoadEntities: true,
       synchronize: true
     }),
-    GroupModule
+    GroupModule,
+    CategoryModule
   ],
   controllers: [],
   providers: [],
