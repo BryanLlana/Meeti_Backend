@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { GroupModule } from './group/group.module';
 import { CategoryModule } from './category/category.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { CategoryModule } from './category/category.module';
       synchronize: true
     }),
     GroupModule,
-    CategoryModule
+    CategoryModule,
+    CommonModule
   ],
   controllers: [],
   providers: [],

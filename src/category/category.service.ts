@@ -4,6 +4,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class CategoryService {
@@ -28,9 +29,13 @@ export class CategoryService {
     }
   }
 
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 12, offset = 1 } = paginationDto
     try {
-      const categories = await this.categoryRepository.find()
+      const categories = await this.categoryRepository.find({
+        take: limit,
+        skip: limit * (offset - 1)
+      })
       return categories
     } catch (error) {
       console.log(error)
@@ -45,10 +50,15 @@ export class CategoryService {
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    const category = await this.findOne(id)
+    const category = await this.categoryRepository.preload({
+      id,
+      ...updateCategoryDto
+    })
     try {
+      await this.categoryRepository.save(category)   
+      return category   
     } catch (error) {
-      
+      throw new InternalServerErrorException('Internal Server Error')
     }
   }
 
