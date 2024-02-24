@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Category } from "src/category/entities/category.entity";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
 @Entity()
 export class Group {
@@ -9,4 +10,25 @@ export class Group {
     unique: true
   })
   public title: string
+
+  @Column('text', {
+    nullable: false
+  })
+  public description: string
+
+  @Column('varchar', {
+    nullable: true
+  })
+  public url: string
+
+  @Column('varchar', {
+    nullable: true
+  })
+  public image: string
+
+  @ManyToOne(
+    () => Category,
+    (category) => category.groups
+  )
+  public category: Category
 }
