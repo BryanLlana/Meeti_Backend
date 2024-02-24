@@ -3,10 +3,11 @@ import { GroupService } from './group.service';
 import { GroupController } from './group.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Group } from './entities/group.entity';
+import { Category } from 'src/category/entities/category.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Group])
+    TypeOrmModule.forFeature([Group, Category])
   ],
   controllers: [GroupController],
   providers: [GroupService],

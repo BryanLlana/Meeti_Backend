@@ -19,7 +19,7 @@ export class Group {
   @Column('varchar', {
     nullable: true
   })
-  public url: string
+  public website: string
 
   @Column('varchar', {
     nullable: true

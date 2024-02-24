@@ -1,11 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
+import { Repository } from 'typeorm';
+import { Group } from './entities/group.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class GroupService {
-  create(createGroupDto: CreateGroupDto) {
-    return 'This action adds a new group';
+  constructor(
+    @InjectRepository(Group)
+    private readonly groupRepository: Repository<Group>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>
+  ) {}
+
+  async create(createGroupDto: CreateGroupDto) {
+    try {
+      const { category, ...groupForm  } = createGroupDto
+      const categoryEntity = await this.categoryRepository.findOneBy({ id: category })
+      const group = this.groupRepository.create({
+        ...groupForm,
+        category: categoryEntity
+      })
+      this.groupRepository.save(group)
+      return group
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 
   findAll() {

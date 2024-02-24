@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { GroupModule } from './group/group.module';
 import { CategoryModule } from './category/category.module';
 import { CommonModule } from './common/common.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { CommonModule } from './common/common.module';
     }),
     GroupModule,
     CategoryModule,
-    CommonModule
+    CommonModule,
+    FilesModule
   ],
   controllers: [],
   providers: [],
