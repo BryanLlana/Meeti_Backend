@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 @Entity()
 export class Group {
   @PrimaryGeneratedColumn('uuid')
-  public id: number
+  public id: string
   
   @Column('varchar', {
     unique: true
@@ -28,7 +28,8 @@ export class Group {
 
   @ManyToOne(
     () => Category,
-    (category) => category.groups
+    (category) => category.groups,
+    { eager: true }
   )
   public category: Category
 }

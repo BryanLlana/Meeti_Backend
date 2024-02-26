@@ -1,4 +1,4 @@
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { Repository } from 'typeorm';
@@ -41,8 +41,10 @@ export class GroupService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} group`;
+  async findOne(id: string) {
+    const group = await this.groupRepository.findOneBy({ id })
+    if (!group) throw new NotFoundException('Grupo inexistente')
+    return group
   }
 
   update(id: number, updateGroupDto: UpdateGroupDto) {
