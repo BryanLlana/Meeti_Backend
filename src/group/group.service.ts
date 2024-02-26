@@ -47,8 +47,22 @@ export class GroupService {
     return group
   }
 
-  update(id: number, updateGroupDto: UpdateGroupDto) {
-    return `This action updates a #${id} group`;
+  async update(id: string, updateGroupDto: UpdateGroupDto) {
+    const { category, ...groupForm  } = updateGroupDto
+    const categoryEntity = await this.categoryRepository.findOneBy({ id: category })
+    const grupo = await this.groupRepository.preload({
+      id,
+      ...groupForm,
+      category: categoryEntity
+    })
+
+    try {
+      await this.groupRepository.save(grupo)
+      return grupo
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 
   remove(id: number) {
