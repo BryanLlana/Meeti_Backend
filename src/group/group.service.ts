@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { Group } from './entities/group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/category/entities/category.entity';
+import { FilesService } from 'src/files/files.service';
+import { unlinkSync } from 'fs';
 
 @Injectable()
 export class GroupService {
@@ -12,7 +14,8 @@ export class GroupService {
     @InjectRepository(Group)
     private readonly groupRepository: Repository<Group>,
     @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>
+    private readonly categoryRepository: Repository<Category>,
+    private readonly fileService: FilesService
   ) {}
 
   async create(createGroupDto: CreateGroupDto) {
@@ -65,7 +68,15 @@ export class GroupService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} group`;
+  async remove(id: string) {
+    const group = await this.findOne(id)
+    const path = this.fileService.getStaticGroupImage(group.image)
+    unlinkSync(path)
+    try {
+      await this.groupRepository.remove(group)
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 }

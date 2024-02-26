@@ -8,6 +8,9 @@ import { ConfigModule } from '@nestjs/config';
   providers: [FilesService],
   imports: [
     ConfigModule
+  ],
+  exports: [
+    FilesService
   ]
 })
 export class FilesModule {}
