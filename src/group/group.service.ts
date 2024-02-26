@@ -31,8 +31,14 @@ export class GroupService {
     }
   }
 
-  findAll() {
-    return `This action returns all group`;
+  async findAll() {
+    try {
+      const groups = await this.groupRepository.find()
+      return groups
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 
   findOne(id: number) {
