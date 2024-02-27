@@ -5,6 +5,7 @@ import { GroupModule } from './group/group.module';
 import { CategoryModule } from './category/category.module';
 import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { FilesModule } from './files/files.module';
     GroupModule,
     CategoryModule,
     CommonModule,
-    FilesModule
+    FilesModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
