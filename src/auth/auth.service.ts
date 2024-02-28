@@ -29,7 +29,7 @@ export class AuthService {
       await this.userRepository.save(user)
       return {
         ...user,
-        token: this.getJwtToken({ email: user.email })
+        token: this.getJwtToken({ id: user.id })
       }
     } catch (error) {
       console.log(error)
@@ -44,7 +44,7 @@ export class AuthService {
 
     return {
       ...userExists,
-      token: this.getJwtToken({ email: userExists.email })
+      token: this.getJwtToken({ id: userExists.id })
     }
   }
 
