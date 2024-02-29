@@ -1,4 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Group } from "src/group/entities/group.entity";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -24,6 +25,13 @@ export class User {
     nullable: true
   })
   public token: string
+
+  @OneToMany(
+    () => Group,
+    (group) => group.user,
+    { cascade: true }
+  )
+  public groups?: Group[]
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

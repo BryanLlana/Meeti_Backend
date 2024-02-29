@@ -1,3 +1,4 @@
+import { User } from "src/auth/entities/user.entity";
 import { Category } from "src/category/entities/category.entity";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
@@ -32,4 +33,11 @@ export class Group {
     { eager: true }
   )
   public category: Category
+
+  @ManyToOne(
+    () => User,
+    (user) => user.groups,
+    { eager: true }
+  )
+  public user: User
 }
