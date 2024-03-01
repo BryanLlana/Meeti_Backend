@@ -1,7 +1,8 @@
 import { Group } from "src/group/entities/group.entity";
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Meeti } from "src/meeti/entities/meeti.entity";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('users')
+@Entity('user')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   public id: string
@@ -32,6 +33,16 @@ export class User {
     { cascade: true }
   )
   public groups?: Group[]
+
+  @OneToMany(
+    () => Meeti,
+    (meeti) => meeti.user,
+    { cascade: true }
+  )
+  public meetis?: Meeti[]
+
+  @ManyToMany(() => Meeti, (meeti) => meeti.users)
+  public meetisUser?: Meeti[]
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

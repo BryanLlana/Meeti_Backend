@@ -1,6 +1,7 @@
 import { User } from "src/auth/entities/user.entity";
 import { Category } from "src/category/entities/category.entity";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Meeti } from "src/meeti/entities/meeti.entity";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 
 @Entity()
 export class Group {
@@ -40,4 +41,11 @@ export class Group {
     { eager: true }
   )
   public user: User
+
+  @OneToMany(
+    () => Meeti,
+    (meeti) => meeti.group,
+    { cascade: true }
+  )
+  public meetis: Meeti[]
 }
