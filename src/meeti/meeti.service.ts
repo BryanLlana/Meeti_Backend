@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateMeetiDto } from './dto/create-meeti.dto';
 import { UpdateMeetiDto } from './dto/update-meeti.dto';
 import { User } from 'src/auth/entities/user.entity';
-import { Repository } from 'typeorm';
+import { LessThan, MoreThan, Repository } from 'typeorm';
 import { Group } from 'src/group/entities/group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meeti } from './entities/meeti.entity';
@@ -35,12 +35,25 @@ export class MeetiService {
 
   async findAll(user: User) {
     try {
-      const meetis = await this.meetiRepository.find({
+      const dateNow = new Date()
+      dateNow.setHours(0, 0, 0, 0)
+      const [meetisNext, meetisPrevious] = await Promise.all([this.meetiRepository.find({
         where: {
-          user
+          user,
+          date: MoreThan(dateNow)
         }
-      })
-      return meetis
+      }), 
+      this.meetiRepository.find({
+        where: {
+          user,
+          date: LessThan(dateNow)
+        }
+      })])
+
+      return {
+        meetisNext,
+        meetisPrevious
+      }
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException('Internal Server Error')

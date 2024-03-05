@@ -30,7 +30,7 @@ export class Meeti {
   @Column('date', {
     nullable: false
   })
-  public date: string
+  public date: Date
 
   @Column('time', {
     nullable: false
@@ -66,7 +66,7 @@ export class Meeti {
   )
   public group: Group
 
-  @ManyToMany(() => User, (user) => user.meetis)
+  @ManyToMany(() => User, (user) => user.meetis, { eager: true})
   @JoinTable()
   public users?: User[]
 }
