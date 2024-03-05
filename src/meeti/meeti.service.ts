@@ -1,11 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateMeetiDto } from './dto/create-meeti.dto';
 import { UpdateMeetiDto } from './dto/update-meeti.dto';
+import { User } from 'src/auth/entities/user.entity';
+import { Repository } from 'typeorm';
+import { Group } from 'src/group/entities/group.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Meeti } from './entities/meeti.entity';
 
 @Injectable()
 export class MeetiService {
-  create(createMeetiDto: CreateMeetiDto) {
-    return 'This action adds a new meeti';
+  constructor(
+    @InjectRepository(Group)
+    private readonly groupRepository: Repository<Group>,
+    @InjectRepository(Meeti)
+    private readonly meetiRepository: Repository<Meeti>
+  ) {}
+
+  async create(createMeetiDto: CreateMeetiDto, user: User) {
+    try {
+      const { group, ...valuesMeeti } = createMeetiDto
+      const groupEntity = await this.groupRepository.findOneBy({ id: group })
+      const meeti = this.meetiRepository.create({
+        ...valuesMeeti,
+        group: groupEntity,
+        user
+      })
+      await this.meetiRepository.save(meeti)
+      return meeti
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 
   findAll() {
