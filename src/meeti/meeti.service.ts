@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateMeetiDto } from './dto/create-meeti.dto';
 import { UpdateMeetiDto } from './dto/update-meeti.dto';
 import { User } from 'src/auth/entities/user.entity';
@@ -60,8 +60,13 @@ export class MeetiService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} meeti`;
+  async findOne(id: string, user: User) {
+    const meeti = await this.meetiRepository.findOneBy({
+      id,
+      user
+    })
+    if (!meeti) throw new NotFoundException('Acción no válida')
+    return meeti
   }
 
   update(id: number, updateMeetiDto: UpdateMeetiDto) {

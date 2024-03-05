@@ -22,8 +22,8 @@ export class MeetiController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.meetiService.findOne(+id);
+  findOne(@Param('id') id: string, @GetUser() user: User) {
+    return this.meetiService.findOne(id, user);
   }
 
   @Patch(':id')
