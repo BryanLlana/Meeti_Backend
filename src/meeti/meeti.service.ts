@@ -33,8 +33,18 @@ export class MeetiService {
     }
   }
 
-  findAll() {
-    return `This action returns all meeti`;
+  async findAll(user: User) {
+    try {
+      const meetis = await this.meetiRepository.find({
+        where: {
+          user
+        }
+      })
+      return meetis
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 
   findOne(id: number) {

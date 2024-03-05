@@ -17,8 +17,8 @@ export class MeetiController {
   }
 
   @Get()
-  findAll() {
-    return this.meetiService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.meetiService.findAll(user);
   }
 
   @Get(':id')
