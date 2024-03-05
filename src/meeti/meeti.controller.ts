@@ -27,8 +27,8 @@ export class MeetiController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMeetiDto: UpdateMeetiDto) {
-    return this.meetiService.update(+id, updateMeetiDto);
+  update(@Param('id') id: string, @Body() updateMeetiDto: UpdateMeetiDto, @GetUser() user: User) {
+    return this.meetiService.update(id, updateMeetiDto, user);
   }
 
   @Delete(':id')

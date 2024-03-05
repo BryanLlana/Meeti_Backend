@@ -69,8 +69,23 @@ export class MeetiService {
     return meeti
   }
 
-  update(id: number, updateMeetiDto: UpdateMeetiDto) {
-    return `This action updates a #${id} meeti`;
+  async update(id: string, updateMeetiDto: UpdateMeetiDto, user: User) {
+    await this.findOne(id, user)
+    const { group, ...meetiForm } = updateMeetiDto
+    const groupEntity = await this.groupRepository.findOneBy({ id: group })
+    const meeti = await this.meetiRepository.preload({
+      id,
+      ...meetiForm,
+      group: groupEntity
+    })
+
+    try {
+      await this.meetiRepository.save(meeti)
+      return meeti
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 
   remove(id: number) {
