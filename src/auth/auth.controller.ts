@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateAuthDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './decorator/get-user.decorator';
@@ -28,5 +28,11 @@ export class AuthController {
       ok: true,
       user
     }
+  }
+
+  @Post('edit-profile')
+  @UseGuards(AuthGuard())
+  editProfile(@Body() updateUserDto: UpdateUserDto ,@GetUser() user: User) {
+    this.authService.editProfile(updateUserDto, user)
   }
 }

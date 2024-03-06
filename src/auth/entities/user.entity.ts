@@ -18,6 +18,11 @@ export class User {
   public email: string
   @Column('varchar')
   public password: string
+  @Column('varchar', {
+    nullable: true,
+    default: ''
+  })
+  public description: string
   @Column('bool', {
     default: true
   })

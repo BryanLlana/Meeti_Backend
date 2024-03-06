@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateAuthDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,6 +7,7 @@ import * as bcrypt from 'bcryptjs'
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -51,5 +51,12 @@ export class AuthService {
   private getJwtToken (payload: JwtPayload) {
     const token = this.jwtService.sign(payload)
     return token
+  }
+
+  async editProfile (updateUserDto: UpdateUserDto, user: User) {
+    user.name = updateUserDto.name
+    user.description = updateUserDto.description
+    user.email = updateUserDto.email
+    await this.userRepository.save(user)
   }
 }
