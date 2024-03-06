@@ -88,7 +88,14 @@ export class MeetiService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} meeti`;
+  async remove(id: string, user: User) {
+    const meeti = await this.findOne(id, user)
+
+    try {
+      await this.meetiRepository.remove(meeti)
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
   }
 }

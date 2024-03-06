@@ -32,7 +32,7 @@ export class MeetiController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.meetiService.remove(+id);
+  remove(@Param('id') id: string, @GetUser() user: User) {
+    return this.meetiService.remove(id, user);
   }
 }
