@@ -9,4 +9,10 @@ export class FilesService {
     if (!existsSync(path)) throw new BadRequestException('Imagen no encontrada')
     return path
   }
+
+  getStaticUserImage(imageName: string) {
+    const path = join(__dirname, '../../static/users', imageName)
+    if (!existsSync(path)) throw new BadRequestException('Imagen no encontrada')
+    return path
+  }
 }

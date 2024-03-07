@@ -8,4 +8,7 @@ export class UpdateUserDto {
   public readonly description: string
   @IsString()
   public readonly email: string
+  @IsString() 
+  @IsOptional()
+  public readonly image: string
 }

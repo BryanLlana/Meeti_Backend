@@ -56,4 +56,46 @@ export class FilesController {
       fileName: file.filename
     }
   }
+
+  @Get('profile/:imageName')
+  findImageUser(@Res() res: Response, @Param('imageName') imageName: string) {
+    const path = this.filesService.getStaticUserImage(imageName)
+    res.sendFile(path)
+  }
+
+  @Post('profile')
+  @UseInterceptors(FileInterceptor('image', {
+    fileFilter: fileFilter,
+    storage: diskStorage({
+      destination: './static/users',
+      filename: fileNamer
+    })
+  }))
+  uploadImageUser(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Imagen no subida')
+    const secureUrl = `${this.configService.get('HOST_API')}/files/profile/${file.filename}`
+    return {
+      secureUrl,
+      fileName: file.filename
+    }
+  }
+
+  @Patch('profile/:imageName')
+  @UseInterceptors(FileInterceptor('image', {
+    fileFilter: fileFilter,
+    storage: diskStorage({
+      destination: './static/users',
+      filename: fileNamer
+    })
+  }))
+  updateImageUser(@UploadedFile() file: Express.Multer.File, @Param('imageName') imageName: string) {
+    const path = this.filesService.getStaticUserImage(imageName)
+    if (!file) throw new BadRequestException('Imagen no subida')
+    const secureUrl = `${this.configService.get('HOST_API')}/files/profile/${file.filename}`
+    unlinkSync(path)
+    return {
+      secureUrl,
+      fileName: file.filename
+    }
+  }
 }

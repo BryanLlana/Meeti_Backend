@@ -54,9 +54,10 @@ export class AuthService {
   }
 
   async editProfile (updateUserDto: UpdateUserDto, user: User) {
-    user.name = updateUserDto.name
-    user.description = updateUserDto.description
-    user.email = updateUserDto.email
-    await this.userRepository.save(user)
+    const userEntity = await this.userRepository.preload({
+      id: user.id,
+      ...updateUserDto
+    })
+    await this.userRepository.save(userEntity)
   }
 }
