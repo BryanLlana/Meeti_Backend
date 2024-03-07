@@ -6,6 +6,7 @@ import { LessThan, MoreThan, Repository } from 'typeorm';
 import { Group } from 'src/group/entities/group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meeti } from './entities/meeti.entity';
+import { OptionDto } from '../common/dto/option.dto';
 
 @Injectable()
 export class MeetiService {
@@ -33,7 +34,22 @@ export class MeetiService {
     }
   }
 
-  async findAll(user: User) {
+  async findAll(option: OptionDto, user: User) {
+    if (option.option === 'true') {
+      const dateNow = new Date()
+      dateNow.setHours(0, 0, 0, 0)
+      const meetis = await this.meetiRepository.find({
+        where: {
+          date: MoreThan(dateNow)
+        },
+        order: {
+          date: 'ASC'
+        }
+      })
+
+      return meetis
+    }
+
     try {
       const dateNow = new Date()
       dateNow.setHours(0, 0, 0, 0)
@@ -41,12 +57,18 @@ export class MeetiService {
         where: {
           user,
           date: MoreThan(dateNow)
+        },
+        order: {
+          date: 'ASC'
         }
       }), 
       this.meetiRepository.find({
         where: {
           user,
           date: LessThan(dateNow)
+        },
+        order: {
+          date: 'DESC'
         }
       })])
 

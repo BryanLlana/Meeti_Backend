@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { MeetiService } from './meeti.service';
 import { CreateMeetiDto } from './dto/create-meeti.dto';
 import { UpdateMeetiDto } from './dto/update-meeti.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { User } from 'src/auth/entities/user.entity';
+import { OptionDto } from 'src/common/dto/option.dto';
 
 @Controller('meeti')
 @UseGuards(AuthGuard())
@@ -17,8 +18,8 @@ export class MeetiController {
   }
 
   @Get()
-  findAll(@GetUser() user: User) {
-    return this.meetiService.findAll(user);
+  findAll(@Query() option: OptionDto, @GetUser() user: User) {
+    return this.meetiService.findAll(option, user);
   }
 
   @Get(':id')
