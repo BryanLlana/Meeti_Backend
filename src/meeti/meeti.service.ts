@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreateMeetiDto } from './dto/create-meeti.dto';
 import { UpdateMeetiDto } from './dto/update-meeti.dto';
 import { User } from 'src/auth/entities/user.entity';
-import { LessThan, MoreThan, Repository } from 'typeorm';
+import { LessThan, MoreThan, Not, Repository } from 'typeorm';
 import { Group } from 'src/group/entities/group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meeti } from './entities/meeti.entity';
@@ -109,6 +109,14 @@ export class MeetiService {
       user
     })
     if (!meeti) throw new NotFoundException('Acción no válida')
+    return meeti
+  }
+
+  async findOnePublic(id: string) {
+    const meeti = await this.meetiRepository.findOneBy({
+      id
+    })
+    if (!meeti) throw new NotFoundException('Meeti inexistente')
     return meeti
   }
 

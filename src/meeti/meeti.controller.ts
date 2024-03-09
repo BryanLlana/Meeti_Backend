@@ -34,6 +34,11 @@ export class MeetiController {
     return this.meetiService.findOne(id, user);
   }
 
+  @Get('public/:id')
+  findOnePublic(@Param('id') id: string) {
+    return this.meetiService.findOnePublic(id)
+  }
+
   @Patch(':id')
   @UseGuards(AuthGuard())
   update(@Param('id') id: string, @Body() updateMeetiDto: UpdateMeetiDto, @GetUser() user: User) {
