@@ -34,22 +34,7 @@ export class MeetiService {
     }
   }
 
-  async findAll(option: OptionDto, user: User) {
-    if (option.option === 'true') {
-      const dateNow = new Date()
-      dateNow.setHours(0, 0, 0, 0)
-      const meetis = await this.meetiRepository.find({
-        where: {
-          date: MoreThan(dateNow)
-        },
-        order: {
-          date: 'ASC'
-        }
-      })
-
-      return meetis
-    }
-
+  async findAll(user: User) {
     try {
       const dateNow = new Date()
       dateNow.setHours(0, 0, 0, 0)
@@ -79,6 +64,42 @@ export class MeetiService {
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException('Internal Server Error')
+    }
+  }
+
+  async findAllPublic(option: OptionDto) {
+    if (option.limit) {
+      try {
+        const dateNow = new Date()
+        dateNow.setHours(0, 0, 0, 0)
+        const meetis = await this.meetiRepository.find({
+          where: {
+            date: MoreThan(dateNow)
+          },
+          order: {
+            date: 'ASC'
+          },
+          take: option.limit
+        })
+        return meetis
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    try {
+      const dateNow = new Date()
+      dateNow.setHours(0, 0, 0, 0)
+      const meetis = await this.meetiRepository.find({
+        where: {
+          date: MoreThan(dateNow)
+        },
+        order: {
+          date: 'ASC'
+        }
+      })
+      return meetis
+    } catch (error) {
+      console.log(error)
     }
   }
 

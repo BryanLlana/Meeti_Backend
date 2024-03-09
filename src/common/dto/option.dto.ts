@@ -1,7 +1,8 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsNumber, IsOptional } from "class-validator";
 
 export class OptionDto {
-  @IsOptional() @IsString()
-  @IsEnum(['true'])
-  public option: string
+  @IsOptional() @IsNumber()
+  @Type(() => Number)
+  public limit: number
 }
