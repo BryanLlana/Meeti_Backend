@@ -17,6 +17,12 @@ export class MeetiController {
     return this.meetiService.create(createMeetiDto, user);
   }
 
+  @Post('confirmar-asistencia/:id')
+  @UseGuards(AuthGuard())
+  register(@Param('id') id: string, @GetUser() user: User) {
+    return this.meetiService.register(id, user)
+  }
+
   @Get()
   @UseGuards(AuthGuard())
   findAll(@GetUser() user: User) {

@@ -34,6 +34,22 @@ export class MeetiService {
     }
   }
 
+  async register(id: string, user: User) {
+    const meeti = await this.findOnePublic(id)
+    if (meeti.users.some(user => user.id === user.id)) {
+      meeti.users = meeti.users.filter(user => user.id !== user.id)
+    } else {
+      meeti.users.push(user)
+    }
+    
+    try {
+      await this.meetiRepository.save(meeti)
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Internal Server Error')
+    }
+  }
+
   async findAll(user: User) {
     try {
       const dateNow = new Date()
