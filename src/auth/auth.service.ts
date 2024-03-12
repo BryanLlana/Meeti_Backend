@@ -8,12 +8,15 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Group } from 'src/group/entities/group.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Group)
+    private readonly groupRepository: Repository<Group>,
     private readonly jwtService: JwtService
   ) {}
 
@@ -46,6 +49,18 @@ export class AuthService {
       ...userExists,
       token: this.getJwtToken({ id: userExists.id })
     }
+  }
+
+  async findUser (id: string) {
+    const user = await this.userRepository.findOneBy({ id })
+    const groups = await this.groupRepository.find({
+      where: {
+        user
+      }
+    })
+    if (!user) throw new NotFoundException('Usuario inexistente')
+    user.groups = groups
+    return user
   }
 
   private getJwtToken (payload: JwtPayload) {
