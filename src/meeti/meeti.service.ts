@@ -36,8 +36,8 @@ export class MeetiService {
 
   async register(id: string, user: User) {
     const meeti = await this.findOnePublic(id)
-    if (meeti.users.some(user => user.id === user.id)) {
-      meeti.users = meeti.users.filter(user => user.id !== user.id)
+    if (meeti.users.some(us => us.id === user.id)) {
+      meeti.users = meeti.users.filter(us => us.id !== user.id)
     } else {
       meeti.users.push(user)
     }
