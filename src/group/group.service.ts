@@ -1,13 +1,14 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Group } from './entities/group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/category/entities/category.entity';
 import { FilesService } from 'src/files/files.service';
 import { unlinkSync } from 'fs';
 import { User } from 'src/auth/entities/user.entity';
+import { Meeti } from 'src/meeti/entities/meeti.entity';
 
 @Injectable()
 export class GroupService {
@@ -16,12 +17,14 @@ export class GroupService {
     private readonly groupRepository: Repository<Group>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(Meeti)
+    private readonly meetiRepository: Repository<Meeti>,
     private readonly fileService: FilesService
-  ) {}
+  ) { }
 
   async create(createGroupDto: CreateGroupDto, user: User) {
     try {
-      const { category, ...groupForm  } = createGroupDto
+      const { category, ...groupForm } = createGroupDto
       const categoryEntity = await this.categoryRepository.findOneBy({ id: category })
       const group = this.groupRepository.create({
         ...groupForm,
@@ -59,8 +62,26 @@ export class GroupService {
     return group
   }
 
+  async findOnePublic(id: string) {
+    const group = await this.groupRepository.findOneBy({ id })
+    const dateNow = new Date()
+    dateNow.setHours(0, 0, 0, 0)
+    const meetis = await this.meetiRepository.find({
+      where: {
+        date: MoreThan(dateNow),
+        group: group
+      },
+      order: {
+        date: 'ASC'
+      }
+    })
+    if (!group) throw new NotFoundException('Grupo inexistente')
+    group.meetis = meetis
+    return group
+  }
+
   async update(id: string, updateGroupDto: UpdateGroupDto, user: User) {
-    const { category, ...groupForm  } = updateGroupDto
+    const { category, ...groupForm } = updateGroupDto
     const categoryEntity = await this.categoryRepository.findOneBy({ id: category })
     await this.findOne(id, user)
     const grupo = await this.groupRepository.preload({

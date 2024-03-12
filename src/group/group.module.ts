@@ -6,10 +6,11 @@ import { Group } from './entities/group.entity';
 import { Category } from 'src/category/entities/category.entity';
 import { FilesModule } from 'src/files/files.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { Meeti } from 'src/meeti/entities/meeti.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Group, Category]),
+    TypeOrmModule.forFeature([Group, Category, Meeti]),
     FilesModule,
     AuthModule
   ],
