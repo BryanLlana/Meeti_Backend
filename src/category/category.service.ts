@@ -44,8 +44,8 @@ export class CategoryService {
   }
 
   async findOne(id: number) {
-    const category = await this.categoryRepository.findBy({ id })
-    if (category.length === 0) throw new NotFoundException('Categoría inexistente')
+    const category = await this.categoryRepository.findOneBy({ id })
+    if (!category) throw new NotFoundException('Categoría inexistente')
     return category
   }
 

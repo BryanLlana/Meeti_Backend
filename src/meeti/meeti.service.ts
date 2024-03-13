@@ -15,7 +15,7 @@ export class MeetiService {
     private readonly groupRepository: Repository<Group>,
     @InjectRepository(Meeti)
     private readonly meetiRepository: Repository<Meeti>
-  ) {}
+  ) { }
 
   async create(createMeetiDto: CreateMeetiDto, user: User) {
     try {
@@ -41,7 +41,7 @@ export class MeetiService {
     } else {
       meeti.users.push(user)
     }
-    
+
     try {
       await this.meetiRepository.save(meeti)
     } catch (error) {
@@ -62,7 +62,7 @@ export class MeetiService {
         order: {
           date: 'ASC'
         }
-      }), 
+      }),
       this.meetiRepository.find({
         where: {
           user,
@@ -97,6 +97,22 @@ export class MeetiService {
           },
           take: option.limit
         })
+        return meetis
+      } catch (error) {
+        console.log(error)
+      }
+    } else if (option.category) {
+      try {
+        const dateNow = new Date()
+        dateNow.setHours(0, 0, 0, 0)
+        const meetis = await this.meetiRepository.createQueryBuilder('meeti')
+          .leftJoinAndSelect('meeti.group', 'group')
+          .leftJoin('group.category', 'category')
+          .leftJoinAndSelect('meeti.user', 'user')
+          .where('category.id = :categoryId', { categoryId: option.category })
+          .andWhere('meeti.date > :dateNow', { dateNow }) // Filtrar por fecha actual
+          .orderBy('meeti.date', 'ASC') // Ordenar ascendentemente por fecha
+          .getMany();
         return meetis
       } catch (error) {
         console.log(error)
