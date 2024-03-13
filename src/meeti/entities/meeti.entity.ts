@@ -22,7 +22,7 @@ export class Meeti {
   })
   public quota: number
 
-  @Column('varchar', {
+  @Column('text', {
     nullable: false
   })
   public description: string
