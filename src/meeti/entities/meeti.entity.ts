@@ -1,6 +1,7 @@
 import { User } from "src/auth/entities/user.entity";
+import { Comment } from "src/comments/entities/comment.entity";
 import { Group } from "src/group/entities/group.entity";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Meeti {
@@ -65,6 +66,13 @@ export class Meeti {
     { eager: true }
   )
   public group: Group
+
+  @OneToMany(
+    () => Comment,
+    (comment) => comment.meeti,
+    { cascade: true, eager: true }
+  )
+  public comments?: Comment[]
 
   @ManyToMany(() => User, (user) => user.meetis, { eager: true})
   @JoinTable()

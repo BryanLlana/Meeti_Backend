@@ -1,3 +1,4 @@
+import { Comment } from "src/comments/entities/comment.entity";
 import { Group } from "src/group/entities/group.entity";
 import { Meeti } from "src/meeti/entities/meeti.entity";
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -44,6 +45,13 @@ export class User {
     { cascade: true }
   )
   public meetis?: Meeti[]
+
+  @OneToMany(
+    () => Comment,
+    (comment) => comment.user,
+    { cascade: true }
+  )
+  public comments?: Comment[]
 
   @ManyToMany(() => Meeti, (meeti) => meeti.users)
   public meetisUser?: Meeti[]

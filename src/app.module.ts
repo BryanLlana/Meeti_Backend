@@ -7,6 +7,7 @@ import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
 import { MeetiModule } from './meeti/meeti.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { MeetiModule } from './meeti/meeti.module';
     CommonModule,
     FilesModule,
     AuthModule,
-    MeetiModule
+    MeetiModule,
+    CommentsModule
   ],
   controllers: [],
   providers: [],
