@@ -1,6 +1,6 @@
 import { User } from "src/auth/entities/user.entity";
 import { Meeti } from "src/meeti/entities/meeti.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Comment {
@@ -9,6 +9,9 @@ export class Comment {
 
   @Column('text')
   public message: string
+
+  @Column('datetime')
+  public createdAt: Date
 
   @ManyToOne(
     () => User,
@@ -22,6 +25,11 @@ export class Comment {
     (meeti) => meeti.comments
   )
   public meeti: Meeti
+
+  @BeforeInsert()
+  updateCreatedAt() {
+    this.createdAt = new Date()
+  }
 }
 
 

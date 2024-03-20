@@ -20,6 +20,11 @@ export class CommentsController {
     return this.commentsService.create(createCommentDto, id, user);
   }
 
+  @Get(':idMeeti')
+  get(@Param('idMeeti', ParseUUIDPipe) id: string) {
+    return this.commentsService.find(id)
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.commentsService.remove(+id);

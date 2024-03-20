@@ -31,6 +31,18 @@ export class CommentsService {
     }
   }
 
+  async find(id: string) {
+    const meeti = await this.meetiRepository.findOneBy({ id })
+    return this.commentRepository.find({
+      where: {
+        meeti
+      },
+      order: {
+        createdAt: 'ASC'
+      }
+    })
+  }
+
   remove(id: number) {
     return `This action removes a #${id} comment`;
   }
