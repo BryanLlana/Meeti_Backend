@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { User } from 'src/auth/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -43,7 +43,14 @@ export class CommentsService {
     })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(id: string, user: User) {
+    const comment = await this.commentRepository.findOneBy({ id })
+    if (!comment) throw new NotFoundException('Comentario inexistente')
+    if (comment.user.id !== user.id) throw new UnauthorizedException('Acción no válida')
+    try {
+      await this.commentRepository.remove(comment)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

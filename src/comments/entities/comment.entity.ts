@@ -5,7 +5,7 @@ import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGener
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
-  public id: number
+  public id: string
 
   @Column('text')
   public message: string

@@ -26,7 +26,8 @@ export class CommentsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+  @UseGuards(AuthGuard())
+  remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
+    return this.commentsService.remove(id, user);
   }
 }
